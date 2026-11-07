@@ -28,6 +28,9 @@
 - Codex : `CODEX_HOME` temporaire (le dossier doit exister). Premier essai en échec : « could not read Username for https://github.com », Codex clone en HTTPS sans assistant d'identifiants. Avec l'assistant de `gh auth setup-git` (simulé par un `GIT_CONFIG_GLOBAL` temporaire) : 1.1.0 installé, 46 skills.
 - Conséquence : `gh auth setup-git` est obligatoire dans le README. Verdict : retenu.
 
+## E-008 — 2026-11-07 — Installation 1.1.1 depuis le dépôt public, sans identifiants
+- Profil vide : Git sans configuration globale, SSH désactivé, aucun jeton GitHub. Claude Code et Codex installent la 1.1.1 ; Codex charge 46 skills. Verdict : retenu.
+
 ## À faire
 - Installation et parcours sur un vrai PC Windows (PowerShell 5.1 et 7, Claude Code et Codex).
 - Parcours complet `demarrer` avec un vrai élève (nouveau site, puis refonte) ; noter le retour mot pour mot.
