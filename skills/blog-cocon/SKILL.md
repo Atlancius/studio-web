@@ -45,7 +45,7 @@ Copie cette checklist et coche :
 
 **7. Écriture.** Écris `cocon.json` à côté de `brief.md`, JSON strict (schéma dans `references/cocon-schema.md`), `status: "planned"` partout, `site` repris du brief sinon `"TBD"`. Puis vérifie (boucle : corriger et réécrire tant qu'un point échoue) :
 
-- [ ] `jq empty cocon.json` passe (JSON parsable)
+- [ ] `node "${CLAUDE_SKILL_DIR}/scripts/blog-outils.mjs" json-check cocon.json` répond « JSON valide » (`${CLAUDE_SKILL_DIR}` = dossier de ce skill ; Codex : dossier du SKILL.md)
 - [ ] mère avec `slug`, `title`, `keyword_principal` et au moins 1 keyword secondaire
 - [ ] 3 à 7 filles, `pilier_slug` uniques
 - [ ] 3 à 5 petites-filles par fille, total >= 9

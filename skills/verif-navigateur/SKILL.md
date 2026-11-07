@@ -7,92 +7,45 @@ description: "Vérifie un site dans un vrai navigateur (Playwright) : captures e
 
 Aperçu et contrôle automatique d'un site, en local ou en ligne (URL d'un site existant à analyser avant une refonte, par exemple). Montrer les captures à l'élève et expliquer chaque problème en langage simple.
 
-## Constraints
+## Préparer (une fois par projet)
 
-- NEVER run Playwright without checking if it is installed first — install if missing:
-  ```bash
-  npx playwright --version
-  # Si absent :
-  npm i -D @playwright/test && npx playwright install chromium
-  ```
-- ALWAYS serve the site before previewing if it is local: `npm run dev` for a Node project, otherwise `python3 -m http.server 3000` (or `npx serve .`) in the site folder; wait until it answers. A live URL needs no server.
-- NEVER take screenshots without waiting for `networkidle` — partial renders are useless
-- ALWAYS capture all 4 viewports — never skip breakpoints: mobile 320x568, tablet 768x1024, desktop 1024x768, wide 1440x900
-- ALWAYS report console errors even if screenshots look fine
-- NEVER leave browser instances open — always call `browser.close()` in a `finally` block
+Toutes les commandes marchent à l'identique sur Mac, Linux et Windows (PowerShell) : Node.js suffit. Une commande par ligne, sans `&&`.
 
-## Modes
+1. **Servir le site s'il est local** (inutile pour une URL en ligne). Dans un terminal à part ou en tâche de fond, depuis le dossier du site :
+   ```
+   npx --yes serve . -l 3000
+   ```
+   Projet Node (Next.js, Vite…) : sa commande `npm run dev` à la place. Attendre que la page réponde avant de capturer.
+2. **Dossier de travail Playwright**, pour ne pas ajouter de dépendance au site lui-même. Depuis la racine du projet :
+   ```
+   node -e "require('fs').mkdirSync('.studio/verif',{recursive:true})"
+   cd .studio/verif
+   npm init -y
+   npm i -D playwright
+   npx playwright install chromium
+   ```
+   Déjà fait : `npx playwright --version` répond dans `.studio/verif`, passer directement à la capture. Projet qui a déjà Playwright dans son `package.json` : lancer depuis sa racine.
 
-- **Quick Preview** (default): 4-viewport screenshots + console errors/warnings → report with a layout verdict per viewport (e.g. "tablet has overflow on hero section")
-- **Full Validation** (full check, specific route): Quick Preview + console warnings, performance, network, DOM inspection of key elements (e.g. cards, CTAs) → report with issues table
+## Capturer
 
-## Screenshots
-
-```typescript
-import { chromium } from 'playwright';
-
-const viewports = [
-  { name: 'mobile', width: 320, height: 568 },
-  { name: 'tablet', width: 768, height: 1024 },
-  { name: 'desktop', width: 1024, height: 768 },
-  { name: 'wide', width: 1440, height: 900 },
-];
-
-async function screenshotAll(url: string) {
-  const browser = await chromium.launch();
-  try {
-    for (const vp of viewports) {
-      const page = await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
-      await page.goto(url, { waitUntil: 'networkidle' });
-      await page.screenshot({ path: `screenshot-${vp.name}.png`, fullPage: true });
-      await page.close();
-    }
-  } finally {
-    await browser.close();
-  }
-}
-```
-
-Quick look without a script: `npx playwright screenshot <url> --viewport-size=320,568 screenshot-mobile.png` (same for `768,1024`, `1024,768`, `1440,900`). The CLI does not wait for `networkidle`: never use it for the report. Playwright needs a Node project: if the folder has no `package.json`, run the script from a scratch folder (`npm init -y` there) rather than adding dependencies to a plain HTML site.
-
-## Checks (attach listeners before `page.goto`)
-
-- **Console**: `console` events of type `error` and `warning`, plus `pageerror` messages (counted as errors)
-- **Performance** (after `networkidle`, via `performance.getEntriesByType`): TTFB = `responseStart - requestStart`; DOM Loaded = `domContentLoadedEventEnd - startTime`; Full Load = `loadEventEnd - startTime`; First Paint and FCP from `paint` entries
-- **Network**: `response` events → url, status, content-type, body size; report total, failed (status >= 400), 5 largest
-- **DOM** (per key selector): tagName, classes, computed `display`, `position`, `width`, `height`, `color`, `backgroundColor`, `fontSize`, `fontFamily`, `innerHTML` truncated to 500 chars, `role`, `aria-label`, `tabindex`
-
-## Output Format
+Depuis `.studio/verif` (Codex : remplacer `${CLAUDE_SKILL_DIR}` par le dossier de ce skill) :
 
 ```
-## Browser Preview Report — {url}
-
-### Screenshots
-- mobile (320px): screenshot-mobile.png
-- tablet (768px): screenshot-tablet.png
-- desktop (1024px): screenshot-desktop.png
-- wide (1440px): screenshot-wide.png
-
-### Console
-- Errors: {count}
-- Warnings: {count}
-{list if any}
-
-### Performance
-- TTFB: {ms}
-- FCP: {ms}
-- DOM Loaded: {ms}
-- Full Load: {ms}
-
-### Network
-- Total requests: {count}
-- Failed: {count}
-- Largest assets: {list}
-
-### Issues Found
-| Severity | Issue | Details |
-|----------|-------|---------|
+node "${CLAUDE_SKILL_DIR}/scripts/capturer.mjs" http://localhost:3000
 ```
+
+- **Aperçu rapide** (par défaut) : captures pleine page en 4 tailles (mobile 320 × 568, tablette 768 × 1024, ordinateur 1024 × 768, grand écran 1440 × 900), après chargement complet du réseau, débordement horizontal signalé, erreurs et avertissements de la console.
+- **Contrôle complet** : ajouter `--complet` (performance TTFB, FCP, chargements ; requêtes en échec et 5 plus lourdes) et `--selecteurs "header,.cta,form"` pour inspecter des éléments clés (taille, couleurs, police, rôle, aria-label).
+- Autre dossier de sortie : `--sortie captures-avant` (utile pour comparer avant et après une modification).
+
+Sortie : rapport Markdown sur la sortie standard, captures PNG dans `captures/`. Code 1 : page injoignable (serveur arrêté, mauvaise URL) ; code 2 : Playwright absent ou URL invalide, le script affiche les commandes à lancer.
+
+## Règles
+
+- Toujours les 4 tailles, jamais une seule.
+- Toujours signaler les erreurs console, même si les captures semblent bonnes.
+- Montrer les captures à l'élève et expliquer chaque problème en langage simple (« sur téléphone, le bloc des prix dépasse à droite »).
+- Le dossier `.studio/` est exclu de Git : les captures ne partent pas en ligne.
 
 ## Skills liés
 

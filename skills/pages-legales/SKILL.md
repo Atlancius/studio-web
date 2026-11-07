@@ -40,10 +40,10 @@ Marché hors UE (États-Unis, CCPA, arbitrage) : seulement si l'élève le vise,
 Exécute l'inventaire (lecture seule, aucune valeur de `.env`) :
 
 ```bash
-bash "${CLAUDE_SKILL_DIR}/scripts/inventaire-traitements.sh" <racine-du-projet>
+node "${CLAUDE_SKILL_DIR}/scripts/inventaire-traitements.mjs" <racine-du-projet>
 ```
 
-Sortie Markdown sur stdout, 15 fichiers par catégorie (`INVENTAIRE_MAX=<n>` pour tout voir) ; code 2 = erreur d'usage. Le script ne donne que des indices `chemin:ligne`. Ouvre chaque emplacement et confirme : SDK réellement appelé, données envoyées, moment (avant ou après consentement), région du service. Dresse le **registre des traitements**, source de vérité des textes :
+Sortie Markdown sur stdout, 15 fichiers par catégorie (variable `INVENTAIRE_MAX` pour tout voir : `INVENTAIRE_MAX=100 node …` sur Mac et Linux, `$env:INVENTAIRE_MAX = "100"` puis la commande sous PowerShell). Marche sur Mac, Linux et Windows avec Node.js seul ; Git utilisé s'il est présent ; code 2 = erreur d'usage. Le script ne donne que des indices `chemin:ligne`. Ouvre chaque emplacement et confirme : SDK réellement appelé, données envoyées, moment (avant ou après consentement), région du service. Dresse le **registre des traitements**, source de vérité des textes :
 
 | Donnée | Finalité | Base légale (RGPD art. 6) | Destinataire ou sous-traitant, pays | Durée | Preuve `chemin:ligne` |
 |---|---|---|---|---|---|

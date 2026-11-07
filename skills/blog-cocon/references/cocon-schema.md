@@ -59,9 +59,12 @@ Ajoutés par `blog-article` et `blog-batch` sur la petite-fille : `ghost_id` (ID
 
 Une fille `planned` n'a que des petites-filles `planned` ou `draft` ; elle passe `published` quand au moins une petite-fille est publiée. Tous les statuts sont `planned` à la création.
 
-## Lecture rapide (jq)
+## Lecture rapide
+
+Script Node du skill `blog-cocon` (identique sur Mac, Linux et Windows) :
 
 ```bash
-jq '[.filles[].petites_filles[]] | group_by(.status) | map({status: .[0].status, n: length})' cocon.json
-jq '[.filles[].petites_filles[] | select(.status != "published")] | length' cocon.json
+node "${CLAUDE_SKILL_DIR}/scripts/blog-outils.mjs" cocon-stats cocon.json
 ```
+
+Il affiche le nombre de petites-filles par statut et le nombre de non publiées.

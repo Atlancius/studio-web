@@ -80,12 +80,15 @@ Les prix et offres gratuites changent : avant d'annoncer un tarif précis, véri
 
 ## Outils locaux
 
-| Outil | Sert à | Vérifier | Installer |
-|---|---|---|---|
-| Node.js (version LTS) | lancer les outils `npx` (Vercel, formulaires, Next.js) | `node -v` | https://nodejs.org (installateur LTS) |
-| Git | enregistrer les versions du code | `git --version` | Mac : `xcode-select --install` ; Windows : https://git-scm.com |
-| GitHub CLI | se connecter à GitHub depuis le terminal | `gh --version` | https://cli.github.com |
-| Python 3 | prévisualiser un site HTML en local (`python3 -m http.server`) | `python3 --version` | Mac : souvent présent ; sinon https://www.python.org |
-| Navigateur Chrome ou Edge | vérifier le rendu avec `verif-navigateur` | — | — |
+Détecter le système (`node -p "process.platform"` si Node est là, sinon demander) et ne montrer que la colonne qui le concerne. Une commande par ligne. Sous Windows, fermer et rouvrir PowerShell après chaque installation.
 
-Le CLI Vercel ne s'installe pas forcément : `npx vercel` suffit.
+| Outil | Sert à | Vérifier | Installer sur Windows | Installer sur Mac |
+|---|---|---|---|---|
+| Git | enregistrer les versions du code ; requis par Claude Code sous Windows | `git --version` | `winget install --id Git.Git -e` | lancer `git --version` et accepter les outils de développement proposés |
+| Node.js LTS | lancer `npx` (Vercel, serveur local, scripts du pack) | `node --version` | `winget install --id OpenJS.NodeJS.LTS -e` | installateur https://nodejs.org ou `brew install node` |
+| GitHub CLI | se connecter à GitHub | `gh --version` | `winget install --id GitHub.cli -e` | installateur https://cli.github.com ou `brew install gh` |
+| Navigateur Chrome ou Edge | vérifier le rendu avec `verif-navigateur` | — | déjà présent (Edge) | — |
+
+Après GitHub CLI : `gh auth login` (GitHub.com, HTTPS, Yes, navigateur) puis `gh auth setup-git`.
+
+Serveur local pour prévisualiser un site HTML, identique partout : `npx --yes serve . -l 3000`. Le CLI Vercel ne s'installe pas : `npx vercel` suffit.

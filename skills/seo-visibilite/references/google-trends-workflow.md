@@ -4,9 +4,9 @@
 
 - [Concepts Fondamentaux](#concepts-fondamentaux)
 - [Cas d'Usage Prioritaires](#cas-dusage-prioritaires)
-- [Code Pytrends (Python)](#code-pytrends-python)
+- [Collecte sans code](#collecte-sans-code-mac-linux-et-windows)
 - [Intégration dans l'Audit](#intégration-dans-laudit)
-- [Alternatives à Pytrends](#alternatives-à-pytrends)
+- [Autres sources](#autres-sources)
 - [Limites et Précautions](#limites-et-précautions)
 
 
@@ -92,122 +92,19 @@ Trends (0–100) + Volume réel (SEMrush/Ahrefs) + Difficulté = Décision
 | Stable | Élevé | Élevé | Optimiser existant |
 | Déclinant | Faible | Élevé | Éviter |
 
-## Code Pytrends (Python)
+## Collecte sans code (Mac, Linux et Windows)
 
-> pytrends est non officiel et son dépôt GitHub est archivé (lecture seule) depuis le 17 avril 2025 : usage ponctuel uniquement, casse possible sans correctif. Voir « Alternatives à Pytrends » ci-dessous.
+1. Ouvrir https://trends.google.com/trends/explore (navigateur de l'agent ou de l'élève).
+2. Saisir jusqu'à 5 mots-clés à comparer, choisir le pays (France), la période (« 5 dernières années » pour la saisonnalité, « 12 derniers mois » pour la tendance récente) et le type de recherche (Web).
+3. Bloc « Intérêt au fil du temps » : bouton de téléchargement → fichier CSV (`multiTimeline.csv`). Le ranger dans `.studio/trends/`.
+4. Bloc « Requêtes associées » (onglet « En hausse ») : relever les requêtes marquées « Forte hausse » ou à fort pourcentage, et leur pays ou région si pertinent (bloc « Intérêt par sous-région »).
+5. Analyser le CSV (tendance, pic, mois forts), une ligne identique partout :
+   ```
+   node "${CLAUDE_SKILL_DIR}/scripts/analyser-trends.mjs" .studio/trends/multiTimeline.csv
+   ```
+   (Codex : remplacer `${CLAUDE_SKILL_DIR}` par le dossier du skill `seo-visibilite`.)
 
-### Installation
-```bash
-pip install pytrends requests
-```
-
-### Script de base
-```python
-from pytrends.request import TrendReq
-import pandas as pd
-import time
-
-# Initialisation (hl = langue, tz = décalage en minutes, signe inversé : Paris = -60, -120 en été)
-pytrends = TrendReq(hl='fr-FR', tz=-60)
-
-# Keywords (max 5 simultanément)
-keywords = ['audit SEO', 'GEO optimization', 'AEO content']
-
-# Build payload
-pytrends.build_payload(
-    keywords,
-    cat=0,           # 0 = all categories
-    timeframe='today 12-m',  # Options: today 1-m, today 3-m, today 12-m, today 5-y
-    geo='FR',        # FR, US, '' pour mondial
-    gprop=''         # '' = web search, 'youtube', 'news', 'images'
-)
-
-# 1. Intérêt dans le temps
-interest_time = pytrends.interest_over_time()
-print(interest_time.head())
-
-# 2. Intérêt par région
-interest_region = pytrends.interest_by_region(resolution='REGION', inc_low_vol=True)
-print(interest_region.sort_values(keywords[0], ascending=False).head(10))
-
-# 3. Related queries (CRUCIAL pour trouver breakout)
-related = pytrends.related_queries()
-rising = related[keywords[0]]['rising']  # Trier par 'value' pour les breakout
-top = related[keywords[0]]['top']
-
-# 4. Related topics
-related_topics = pytrends.related_topics()
-
-# Rate limit non publié : espacer les appels ; après un 429, attendre ~60 s
-time.sleep(5)
-
-# Export CSV
-interest_time.to_csv('trends_time.csv')
-interest_region.to_csv('trends_region.csv')
-rising.to_csv('trends_rising.csv')
-```
-
-### Script détection breakout
-```python
-from pytrends.request import TrendReq
-import time
-
-def find_breakout_keywords(seed_keywords, geo='FR', threshold=5000):
-    """
-    Trouve les keywords en croissance explosive (breakout).
-    'value' = croissance en % ; Google affiche « Breakout » au-delà de +5000 %.
-    """
-    pytrends = TrendReq(hl='fr-FR', tz=-60)
-    breakout_results = []
-
-    for kw in seed_keywords:
-        pytrends.build_payload([kw], timeframe='today 3-m', geo=geo)
-        related = pytrends.related_queries()
-
-        if related[kw]['rising'] is not None:
-            rising_df = related[kw]['rising']
-            breakout = rising_df[rising_df['value'] > threshold]
-            breakout_results.extend(breakout['query'].tolist())
-
-        time.sleep(3)  # Rate limit
-
-    return list(set(breakout_results))
-
-# Usage
-seed = ['intelligence artificielle', 'formation IA', 'automatisation PME']
-breakouts = find_breakout_keywords(seed, geo='FR')
-print(f"Breakout queries trouvées : {breakouts}")
-```
-
-### Script analyse saisonnalité
-```python
-from pytrends.request import TrendReq
-import pandas as pd
-
-def analyze_seasonality(keyword, geo='FR'):
-    """
-    Analyse la saisonnalité sur 5 ans et retourne le mois optimal de publication.
-    """
-    pytrends = TrendReq(hl='fr-FR', tz=-60)
-    pytrends.build_payload([keyword], timeframe='today 5-y', geo=geo)
-
-    data = pytrends.interest_over_time()
-    data.index = pd.to_datetime(data.index)
-
-    # Groupe par mois et calcule la moyenne
-    monthly_avg = data[keyword].groupby(data.index.month).mean()
-    peak_month = monthly_avg.idxmax()
-
-    months = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc']
-
-    print(f"Pic annuel pour '{keyword}': {months[peak_month-1]}")
-    print(f"Publier en: {months[(peak_month-2) % 12]} (30 jours avant)")
-
-    return monthly_avg
-
-# Usage
-analyze_seasonality('formation en ligne', geo='FR')
-```
+Ne jamais inventer de chiffres : si Google Trends refuse l'accès (trop de requêtes, captcha), le dire, demander à l'élève de faire l'export lui-même et de déposer le CSV dans le projet.
 
 ## Intégration dans l'Audit
 
@@ -238,7 +135,7 @@ Pour chaque mot-clé analysé :
 7. **Croiser avec volume réel** → valider avec SEMrush/Ahrefs
 8. **Compiler en recommandations** → contenu calendar + priorités
 
-## Alternatives à Pytrends
+## Autres sources
 
 | Outil | Prix | Note |
 |-------|------|------|
@@ -253,9 +150,8 @@ Prix relevés le 2026-09-27 : revérifier sur la page tarifs de l'éditeur avant
 
 ## Limites et Précautions
 
-- **Pytrends non officiel et archivé** → peut casser si Google change son endpoint, sans correctif
-- **Rate limiting** : limite non publiée ; espacer les requêtes, pause ~60 s après un 429
+- **Accès limité** : Google Trends bloque parfois les consultations répétées (captcha, erreur 429) : espacer, ou faire faire l'export par l'élève
 - **Données normalisées** : toujours croiser avec volume absolu
-- **Biais géographique** : adapter la langue ET le pays (geo='FR' + hl='fr-FR')
+- **Biais géographique** : adapter la langue ET le pays (pays France et langue française)
 - **Timeframe court vs long** : tendances récentes vs patterns saisonniers sont des analyses différentes
 

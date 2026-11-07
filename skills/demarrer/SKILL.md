@@ -22,7 +22,7 @@ Ce skill est le chef d'orchestre. Il ne construit rien lui-même : il comprend l
 Lire `.studio/state.json` à la racine du dossier courant.
 
 - **Présent** : afficher le projet, les modules actifs, la phase en cours et les phases terminées. Proposer : reprendre là où on s'est arrêté (recommandé), modifier une réponse du cadrage, voir l'état des comptes (`comptes`), recommencer à zéro (renommer l'ancien en `.studio/state-AAAA-MM-JJ.json`, ne jamais supprimer).
-- **Absent** : vérifier que le dossier courant est bien le dossier du projet (vide ou contenant le site existant). Sinon proposer d'en créer un (`mkdir mon-projet && cd mon-projet`) et de relancer l'agent dedans. Créer `.studio/` et ajouter `.studio/` au `.gitignore` s'il y a un dépôt Git (les réponses peuvent être personnelles).
+- **Absent** : vérifier que le dossier courant est bien le dossier du projet (vide ou contenant le site existant). Sinon proposer d'en créer un (l'agent le crée lui-même, par exemple `Documents/mon-projet`) et de relancer l'agent dans ce dossier. Créer `.studio/` et ajouter `.studio/` au `.gitignore` s'il y a un dépôt Git (les réponses peuvent être personnelles).
 
 Présenter le parcours en 4 lignes : cadrage (10 à 15 minutes) → comptes → construction module par module avec validation à chaque étape → mise en ligne. Demander « on y va ? ».
 
@@ -96,7 +96,7 @@ Quand tous les modules actifs sont terminés : résumer l'URL en ligne, les modu
 
 ```json
 {
-  "version": 1, "projet": "", "cree_le": "",
+  "version": 1, "projet": "", "cree_le": "", "systeme": "darwin | win32 | linux",
   "situation": "nouveau | refonte | modification",
   "existant": { "url": "", "depot": "", "stack": "", "garder": "", "changer": "" },
   "references": [ { "url": "", "ce_qui_plait": "" } ],
@@ -114,6 +114,10 @@ Quand tous les modules actifs sont terminés : résumer l'URL en ligne, les modu
   "phase_courante": "cadrage", "phases_terminees": []
 }
 ```
+
+## Mac et Windows
+
+Détecter le système au début (`node -p "process.platform"` : `darwin` = Mac, `win32` = Windows) et le noter dans `systeme` de `.studio/state.json`. Toute commande donnée à l'élève ou lancée par l'agent doit marcher sur les deux : Node.js, `npx` et `git`, une commande par ligne, sans `&&` ni pipe vers des outils Unix. Quand une action diffère (variable d'environnement, installation d'un outil), donner seulement la version du système de l'élève. Sous Windows, chemins avec `\` dans les explications, et rappeler de rouvrir PowerShell après une installation.
 
 ## Garde-fous
 

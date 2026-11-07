@@ -1,0 +1,12 @@
+{
+  "name": "studio-web",
+  "interface": { "displayName": "Studio Web" },
+  "plugins": [
+    {
+      "name": "studio-web",
+      "source": { "source": "local", "path": "./" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "Productivity"
+    }
+  ]
+}

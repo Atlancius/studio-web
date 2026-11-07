@@ -54,7 +54,7 @@ Dériver la palette des couleurs du logo ([references/color-system.md](reference
 
 Répartition 60-30-10 : 60 % surfaces neutres, 30 % structure en primaire, 10 % accent (boutons d'action, mises en avant).
 
-**Contrôle obligatoire** : lister chaque paire texte/fond, libellé/bouton, icône/surface et anneau de focus/surface, en clair et en sombre, avec le ratio WCAG de chacune, **calculé** (petit calcul `node -e` ou `python3 -c` à partir de la luminance relative, ou [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)), jamais estimé à l'œil. Seuils : texte 4,5:1, grand texte et éléments d'interface 3:1. Paire en échec : déplacer le token d'un ou deux paliers (jamais modifier la couleur du logo), recalculer, continuer seulement à 0 FAIL. Une couleur du logo qui n'atteint pas le seuil en texte reste décorative et reçoit une sœur plus foncée pour le texte.
+**Contrôle obligatoire** : lister chaque paire texte/fond, libellé/bouton, icône/surface et anneau de focus/surface, en clair et en sombre, avec le ratio WCAG de chacune, **calculé** (petit calcul `node -e` à partir de la luminance relative, ou [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)), jamais estimé à l'œil. Seuils : texte 4,5:1, grand texte et éléments d'interface 3:1. Paire en échec : déplacer le token d'un ou deux paliers (jamais modifier la couleur du logo), recalculer, continuer seulement à 0 FAIL. Une couleur du logo qui n'atteint pas le seuil en texte reste décorative et reçoit une sœur plus foncée pour le texte.
 
 **Livrer** : tableau HEX, tokens CSS (Tailwind v4 : primitifs dans `@theme`, sémantiques dans `:root`, surcharges `.dark` ; site HTML simple : variables CSS dans `:root`), rapport de contraste.
 

@@ -27,8 +27,11 @@ Tutoiement, une question à la fois. Anatomie d'un thème, helpers Handlebars, p
 ## 1. Pré-requis
 
 1. `ghost-config.md` existe à la racine (URL du blog). Sinon : stopper, lancer `blog-setup-ghost`.
-2. Clé Admin API présente (format `id:secret`), **sans jamais l'afficher** : `printenv GHOST_ADMIN_API_KEY >/dev/null && echo définie || echo absente`. Absente : demander à l'élève de l'exporter lui-même dans son shell (`export GHOST_ADMIN_API_KEY=...`), sans la coller dans le chat ; à défaut, upload manuel (étape 6).
-3. Outils : `git`, `zip`, `curl`, `openssl` (`command -v` chacun).
+2. Outils et variables, sans jamais afficher la clé : `node "${CLAUDE_SKILL_DIR}/scripts/ghost-theme.mjs" check` (vérifie Node 20+, git, `GHOST_URL` et `GHOST_ADMIN_API_KEY` ; affiche seulement OK ou absent). `${CLAUDE_SKILL_DIR}` = dossier de ce skill (Codex : le dossier qui contient ce SKILL.md). Toutes les commandes de ce skill passent par ce script Node : elles sont identiques sur Mac, Linux et Windows (PowerShell ou Git Bash).
+3. Variables absentes : l'élève quitte l'agent, définit les variables lui-même dans son terminal, sans coller la clé dans le chat, puis relance l'agent (`claude` ou `codex`) depuis ce même terminal pour qu'il en hérite (clé Admin au format `id:secret`, voir `ghost-config.md` pour l'URL) :
+   - Mac / Linux / Git Bash : `export GHOST_URL="https://mon-blog.exemple.com"` puis `export GHOST_ADMIN_API_KEY="id:secret"`
+   - Windows PowerShell : `$env:GHOST_URL = "https://mon-blog.exemple.com"` puis `$env:GHOST_ADMIN_API_KEY = "id:secret"`
+   Ces variables ne durent que le temps du terminal. À défaut, upload manuel (étape 6).
 4. Répertoire courant = racine du projet (là où vivent `brief.md`, `charte.md`, `ghost-config.md`).
 
 ## 2. Charte
@@ -40,10 +43,10 @@ Demander si `charte.md` existe. Elle doit contenir au minimum une palette (prima
 Source n'a pas de zip en release : cloner le dernier tag (le dossier `assets/built/` y est déjà compilé, pas de Node à installer).
 
 ```bash
-TAG=$(git ls-remote --tags --refs --sort=-v:refname https://github.com/TryGhost/Source.git 'v*' | head -1 | sed 's#.*refs/tags/##')
-git clone -q --depth 1 --branch "$TAG" https://github.com/TryGhost/Source.git theme && trash theme/.git
-ls theme/package.json theme/default.hbs theme/assets/built/screen.css
+node "${CLAUDE_SKILL_DIR}/scripts/ghost-theme.mjs" fetch-source theme
 ```
+
+Le script trouve le dernier tag `v*` de TryGhost/Source, le clone dans `theme/`, retire le dossier `.git` du clone et vérifie la présence de `package.json`, `default.hbs` et `assets/built/screen.css`.
 
 Réseau bloqué : demander à l'élève de télécharger le code source de la dernière release sur https://github.com/TryGhost/Source/releases et de l'extraire dans `theme/` (`package.json` à la racine de `theme/`).
 
@@ -81,33 +84,25 @@ Navigation et footer : Source les isole dans `partials/components/navigation.hbs
 
 ## 6. Zip, validation, upload, activation
 
-Le zip doit avoir `package.json` à sa racine.
+Le zip doit avoir `package.json` à sa racine (le script refuse sinon).
 
 ```bash
-(cd theme && zip -qr ../theme.zip . -x "*.DS_Store" "node_modules/*" "AGENTS.md" "CLAUDE.md" "gulpfile.js" "pnpm-*" ".github/*" "renovate.json")
-unzip -l theme.zip | grep -c ' package.json$'   # attendu : 1
-npx --yes gscan -z theme.zip                       # zéro erreur exigée
+node "${CLAUDE_SKILL_DIR}/scripts/ghost-theme.mjs" zip theme theme.zip
+npx --yes gscan -z theme.zip
 ```
 
-Erreurs gscan : corriger, re-zipper, relancer jusqu'à zéro erreur. Avertissements de compatibilité : les lire, ne bloquer que sur erreur.
+Le zip exclut `.DS_Store`, `node_modules`, `AGENTS.md`, `CLAUDE.md`, `gulpfile.js`, `pnpm-*`, `.github`, `renovate.json`.
 
-Upload puis activation via l'Admin API (Claude et Codex : `curl`). Si le serveur MCP Ghost de la session expose un outil d'upload de thème, il convient aussi ; sinon `curl`. URL depuis `ghost-config.md`, clé depuis l'environnement, jamais affichée :
+gscan : la version de Source téléchargée peut déjà remonter des erreurs avec la dernière version de gscan (constaté le 2026-11-07 avec Source v1.7.6 : 6 erreurs sur Source non modifié). Pour savoir ce qui vient de tes changements, lancer aussi gscan sur un Source non modifié (`node "${CLAUDE_SKILL_DIR}/scripts/ghost-theme.mjs" fetch-source source-ref`, puis zip et gscan) et comparer : toute erreur nouvelle par rapport à cette référence est à corriger, re-zipper, relancer. Avertissements : les lire, ne bloquer que sur erreur nouvelle. Si Ghost refuse l'upload à cause d'erreurs déjà présentes dans Source, le dire à l'élève et passer au repli manuel ou à une version plus ancienne de Source.
+
+Upload puis activation via l'Admin API. Si le serveur MCP Ghost de la session expose un outil d'upload de thème, il convient aussi ; sinon le script (clé lue dans l'environnement, jamais affichée, JWT de 5 minutes régénéré à chaque appel) :
 
 ```bash
-GHOST_URL="<url sans slash final>"
-KEY_ID="${GHOST_ADMIN_API_KEY%%:*}"; KEY_SECRET="${GHOST_ADMIN_API_KEY##*:}"
-b64() { openssl base64 -A | tr '+/' '-_' | tr -d '='; }
-IAT=$(date +%s); EXP=$((IAT + 300))
-H=$(printf '{"alg":"HS256","typ":"JWT","kid":"%s"}' "$KEY_ID" | b64)
-P=$(printf '{"iat":%s,"exp":%s,"aud":"/admin/"}' "$IAT" "$EXP" | b64)
-S=$(printf '%s.%s' "$H" "$P" | openssl dgst -sha256 -mac HMAC -macopt "hexkey:$KEY_SECRET" -binary | b64)
-JWT="$H.$P.$S"
-
-curl -sS -X POST "$GHOST_URL/ghost/api/admin/themes/upload/" -H "Authorization: Ghost $JWT" -H "Accept-Version: v5.0" -F "file=@theme.zip"
-curl -sS -X PUT  "$GHOST_URL/ghost/api/admin/themes/<name>/activate/" -H "Authorization: Ghost $JWT" -H "Accept-Version: v5.0"
+node "${CLAUDE_SKILL_DIR}/scripts/ghost-theme.mjs" upload theme.zip
+node "${CLAUDE_SKILL_DIR}/scripts/ghost-theme.mjs" activate <name>
 ```
 
-`<name>` = `name` du `package.json`. Succès : réponse `{"themes":[{"name":"...","active":true}]}`. Le JWT expire en 5 min : le régénérer si l'upload tarde. Erreur 400 sur `package.json` : wrapper de dossier dans le zip, refaire le zip depuis l'intérieur de `theme/`. Erreur 401 : clé ou URL fausses, passer à `blog-corrige`.
+`<name>` = `name` du `package.json`. Succès : réponse `{"themes":[{"name":"...","active":true}]}`. Erreur 400 sur `package.json` : le zip a été fait depuis le mauvais dossier, relancer `zip theme theme.zip`. Erreur 401 : clé ou URL fausses, passer à `blog-corrige`.
 
 Repli manuel : Ghost Admin > Settings > Design & branding > Change theme > Upload theme (`theme.zip`) > Activate.
 

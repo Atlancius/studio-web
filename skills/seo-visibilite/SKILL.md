@@ -77,7 +77,7 @@ Détail : [geo-standards](references/geo-standards.md).
 
 ### Phase 4 : Google Trends (`--trends` seulement)
 
-Détail et scripts : [google-trends-workflow](references/google-trends-workflow.md). Par mot-clé : intérêt relatif (0-100), tendance, requêtes en forte hausse, saisonnalité, différences régionales. Source : Google Trends (API alpha si accès) ou `pytrends`, wrapper non officiel archivé le 17 avril 2025 qui peut casser à tout changement de Google : signaler toute erreur, ne jamais fabriquer de données. Publier d'abord sur les requêtes en hausse, programmer le contenu saisonnier 30 à 60 jours avant le pic, comparer les noms des concurrents pour trouver les sujets non couverts.
+Méthode : [google-trends-workflow](references/google-trends-workflow.md). Par mot-clé : intérêt relatif (0-100), tendance, requêtes en forte hausse, saisonnalité, différences régionales. Source : export CSV de Google Trends analysé par `scripts/analyser-trends.mjs` (Node, identique sur Mac et Windows), méthode dans la référence ; signaler toute erreur d'accès, ne jamais fabriquer de données. Publier d'abord sur les requêtes en hausse, programmer le contenu saisonnier 30 à 60 jours avant le pic, comparer les noms des concurrents pour trouver les sujets non couverts.
 
 ### Phase 5 : notes
 
@@ -130,4 +130,4 @@ Finir par les outils : [PageSpeed Insights](https://pagespeed.web.dev), [Rich Re
 - [aeo-standards](references/aeo-standards.md) : réponse d'abord, statut des schémas, prérequis par plateforme, mesures, checklist de 47 points.
 - [geo-standards](references/geo-standards.md) : signaux pour les IA, schéma d'entité, noms des robots.
 - [catalog-cleanup](references/catalog-cleanup.md) : noter et réécrire un catalogue produits par lots validés.
-- [google-trends-workflow](references/google-trends-workflow.md) : code pytrends, hausses, saisonnalité (`--trends`).
+- [google-trends-workflow](references/google-trends-workflow.md) : collecte Google Trends sans code, script d'analyse du CSV, hausses, saisonnalité (`--trends`).

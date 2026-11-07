@@ -8,7 +8,7 @@ Ouvrir aux étapes 1 (upgrade), 6 et 7. Barème Awwwards (Design 40 %, Usability
 |---|---|---|
 | Santé du site (si URL) | `seo-visibilite` | score et problèmes par sévérité |
 | Design system | tokens (`@theme`), composants et charte lus | cohérent / partiel / absent, écarts à la charte |
-| Motion existant | grep `gsap`, `motion`, `framer-motion`, `@keyframes`, `animation-timeline`, `transition`, `three`, `lenis`, `animate(` | niveau 0-3 atteint, techniques, nombre de courbes d'easing |
+| Motion existant | rechercher dans le code (outil de recherche de l'agent) `gsap`, `motion`, `framer-motion`, `@keyframes`, `animation-timeline`, `transition`, `three`, `lenis`, `animate(` | niveau 0-3 atteint, techniques, nombre de courbes d'easing |
 | Accessibilité | `accessibilite`, puis `design-review` | violations WCAG 2.2 AA et principes visuels par sévérité |
 | Rendu réel | navigateur intégré de la session, sinon `verif-navigateur` | captures 320, 768, 1024, 1440 px ; erreurs console |
 | Performance | PageSpeed Insights (URL publique), sinon Lighthouse mobile | LCP, INP (terrain ; TBT en labo), CLS |
@@ -39,7 +39,7 @@ Repères d'étalonnage :
 
 Motion : noter le niveau atteint sur l'échelle 0-3 de `design-animation` (sobre, vivant, expressif, cinématique ; voir sa référence `regles-motion.md`), quelle que soit la technique (CSS, WAAPI, GSAP, Motion, Lenis, three.js), puis sa qualité.
 
-Sans URL déployée : démarrer le serveur de développement du projet (commande `dev` du `package.json`, ou `python3 -m http.server 3000` pour un site HTML simple) et mesurer en local, en le précisant ; impossible de démarrer → « non mesuré ».
+Sans URL déployée : démarrer le serveur de développement du projet (commande `dev` du `package.json`, ou `npx --yes serve . -l 3000` pour un site HTML simple) et mesurer en local, en le précisant ; impossible de démarrer → « non mesuré ».
 
 ## Signes d'un graphisme générique, à corriger en priorité
 

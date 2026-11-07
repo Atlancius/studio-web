@@ -59,10 +59,11 @@ Lister les pages (HTML/JSX/TSX) puis lire selon la stack :
 
 ### Phase 2 — Audit live (si dev server disponible)
 
-Lancer le dev server, puis (Chrome requis ; JSON sur stdout par défaut) :
-```bash
-npx lighthouse <url> --output json --only-categories=seo --chrome-flags="--headless"
+Lancer le serveur local (`npx --yes serve . -l 3000` pour un site HTML, `npm run dev` pour un projet Node), puis, une seule ligne identique sur Mac, Linux et Windows (Chrome ou Edge installé requis) :
 ```
+npx --yes lighthouse http://localhost:3000 --only-categories=seo --output json --output-path .studio/lighthouse-seo.json --chrome-flags="--headless"
+```
+Lire le fichier JSON produit (le score est `categories.seo.score`, sur 1). Toujours `--output-path` plutôt qu'une redirection `>` : sous Windows PowerShell 5.1, `>` écrit en UTF-16 et casse le JSON.
 
 ### Phase 3 — Rapport
 

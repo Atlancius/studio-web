@@ -6,38 +6,98 @@ Auteur : Jeff Martini. Licence : voir `LICENSE` (usage personnel et pour tes cli
 
 ## Installer
 
-Le dépôt est privé : il faut d'abord que Jeff t'ait invité sur GitHub.
+Les commandes ci-dessous sont les mêmes sur Mac et sur Windows, pour Claude Code comme pour Codex. Sous Windows, tape-les dans PowerShell ou dans le Terminal Windows ; sur Mac, dans le Terminal. **Une ligne à la fois.**
 
-1. Donne ton pseudo GitHub à Jeff (crée un compte gratuit sur https://github.com/signup si besoin).
-2. Accepte l'invitation reçue par e-mail, ou sur https://github.com/Atlancius/studio-web/invitations
-3. Connecte ton ordinateur à GitHub une fois pour toutes (installe GitHub CLI : https://cli.github.com) :
+### Étape 1 — Installer les outils de base (une seule fois)
+
+Il faut Git, Node.js (version LTS) et GitHub CLI.
+
+**Windows** (PowerShell) :
+
+```powershell
+winget install --id Git.Git -e
+```
+
+```powershell
+winget install --id OpenJS.NodeJS.LTS -e
+```
+
+```powershell
+winget install --id GitHub.cli -e
+```
+
+Ferme puis rouvre PowerShell pour que les nouvelles commandes soient reconnues.
+
+**Mac** (Terminal) : installe Node.js LTS depuis https://nodejs.org et GitHub CLI depuis https://cli.github.com (ou `brew install node gh` si tu as Homebrew). Git : lance `git --version` ; si le Mac propose d'installer les outils de développement, accepte.
+
+Vérifie (les trois doivent afficher un numéro de version) :
+
+```bash
+git --version
+```
+
+```bash
+node --version
+```
+
+```bash
+gh --version
+```
+
+### Étape 2 — Accès au dépôt privé (une seule fois)
+
+1. Crée un compte GitHub gratuit si tu n'en as pas : https://github.com/signup
+2. Donne ton pseudo GitHub à Jeff, puis accepte l'invitation reçue par e-mail (ou sur https://github.com/Atlancius/studio-web/invitations).
+3. Connecte ton ordinateur à GitHub :
 
 ```bash
 gh auth login
 ```
 
-Choisis GitHub.com, HTTPS, « Login with a web browser », et réponds oui pour configurer Git.
+Réponds : GitHub.com → HTTPS → Yes (authentifier Git) → Login with a web browser. Puis :
 
-### Claude Code
+```bash
+gh auth setup-git
+```
 
-Dans Claude Code, tape ces deux commandes :
+### Étape 3 — Installer le plugin
+
+**Claude Code** — dans Claude Code, tape :
 
 ```
 /plugin marketplace add Atlancius/studio-web
+```
+
+```
 /plugin install studio-web@studio-web
 ```
 
-Puis redémarre Claude Code. Les skills apparaissent sous la forme `studio-web:demarrer`, `studio-web:site-pilote`, etc.
+Puis redémarre Claude Code. (Équivalent dans un terminal : `claude plugin marketplace add Atlancius/studio-web` puis `claude plugin install studio-web@studio-web`.)
 
-Mettre à jour plus tard : `/plugin marketplace update studio-web`.
-
-### Codex
+**Codex** (CLI ou application) — dans un terminal :
 
 ```bash
-gh repo clone Atlancius/studio-web ~/outils/studio-web && bash ~/outils/studio-web/scripts/installer-codex.sh
+codex plugin marketplace add Atlancius/studio-web
 ```
 
-Relance Codex : les skills s'appellent avec `$demarrer`, `$site-pilote`, etc. Mettre à jour plus tard : `cd ~/outils/studio-web && git pull && bash scripts/installer-codex.sh`.
+```bash
+codex plugin add studio-web@studio-web
+```
+
+Puis relance Codex (l'application Codex voit aussi le plugin).
+
+### Mettre à jour
+
+| | Commande |
+|---|---|
+| Claude Code | `/plugin marketplace update studio-web` |
+| Codex | `codex plugin marketplace upgrade studio-web` |
+
+### Si ça bloque
+
+- « repository not found » ou demande de mot de passe : invitation pas encore acceptée, ou `gh auth setup-git` pas lancé.
+- « gh », « git » ou « node » inconnu sous Windows : fermer et rouvrir PowerShell après l'installation.
+- Claude Code sous Windows a besoin de Git for Windows (installé à l'étape 1).
 
 ## Démarrer
 
@@ -89,9 +149,18 @@ Selon tes réponses, l'agent te demandera seulement une partie de ces comptes : 
 
 ## Pour Jeff : gérer les accès
 
+Depuis le dossier du dépôt, sur Mac ou Windows :
+
 ```bash
-scripts/inviter-eleve.sh pseudo1 pseudo2
-scripts/retirer-eleve.sh pseudo1
+node scripts/acces-eleves.mjs inviter pseudo1 pseudo2
+```
+
+```bash
+node scripts/acces-eleves.mjs retirer pseudo1
+```
+
+```bash
+node scripts/acces-eleves.mjs lister
 ```
 
 Chaque élève reçoit un accès en lecture seule.

@@ -21,3 +21,7 @@
 - Décision : dépôt privé `Atlancius/studio-web`, élèves invités en lecture seule ; installation Claude Code par `/plugin marketplace add Atlancius/studio-web`, Codex par clone + `scripts/installer-codex.sh`.
 - Écarté : zip en pièce jointe (pas de mise à jour, copies non contrôlées) ; dépôt public (contenu visible de tous).
 - Conséquence : chaque élève a besoin d'un compte GitHub et de `gh auth login` avant l'installation.
+
+## ADR-006 — Commandes multiplateformes en Node (2026-11-07)
+- Décision : seules les commandes Node (≥ 20), npx, git et gh dans les skills ; scripts `.mjs` sans dépendance ; installation via les marketplaces natives de Claude Code et Codex.
+- Écarté : imposer Git Bash à tous (Codex sous Windows n'y passe pas) ; doubler chaque commande en bash et PowerShell (deux versions à maintenir).

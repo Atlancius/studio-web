@@ -1,7 +1,7 @@
 {
   "name": "studio-web",
   "displayName": "Studio Web",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Pack complet pour créer un site de A à Z avec un agent IA : cadrage interactif, comptes, design, site landing ou multi-pages, formulaire, blog Ghost, réseaux sociaux, SEO et analytics.",
   "author": { "name": "Jeff Martini" },
   "license": "SEE LICENSE IN LICENSE",

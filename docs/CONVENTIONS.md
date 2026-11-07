@@ -48,3 +48,10 @@ Demander à l'élève 1 à 3 sites qu'il aime (et ce qui lui plaît), puis consu
 
 ## Sécurité et publication
 Garder les garde-fous existants : jamais de secret dans un fichier commité ni dans le chat (l'élève tape ses clés lui-même dans le terminal ou le tableau de bord), accord explicite avant toute mise en production, publication ou envoi.
+
+## Compatibilité Mac, Linux, Windows
+- Claude Code sous Windows utilise Git Bash, Codex sous Windows utilise PowerShell : toute commande d'un skill doit marcher dans les deux.
+- Outils autorisés : Node.js (≥ 20), `npx`, `git`, `gh`. Pas de `bash`, `python3`, `jq`, `grep`, `sed`, `curl`, `brew` dans une commande à exécuter.
+- Une commande autonome par ligne : pas de `&&` (absent de PowerShell 5.1), pas de pipe, pas de redirection `>` (UTF-16 en PowerShell 5.1).
+- Logique de plus de deux lignes : script Node `.mjs` sans dépendance dans `skills/<skill>/scripts/`, appelé par `node "${CLAUDE_SKILL_DIR}/scripts/x.mjs"`.
+- Variables d'environnement tapées par l'élève : `export NOM=valeur` sur Mac, `$env:NOM = "valeur"` en PowerShell ; pour Vercel, `npx vercel env add NOM` (identique partout).

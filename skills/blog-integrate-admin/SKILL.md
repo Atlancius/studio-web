@@ -22,7 +22,7 @@ Copie dans le site de l'élève un back-office qui pilote le pipeline P1 brief, 
 2. Couleur d'accent hex : défaut `#5C3BFF`.
 3. Les clés `ANTHROPIC_API_KEY`, `FAL_KEY` (optionnelle : sans elle, pas d'image), `GHOST_ADMIN_API_KEY` (format `<id>:<secret>`, pas la Content API Key) sont-elles à portée ? Sinon, indiquer où les créer (console Anthropic, fal.ai, Ghost admin > Settings > Integrations).
 
-Mot de passe admin : l'élève le choisit (12 caractères minimum, refusé sinon) ou génère `openssl rand -hex 16`, et le met **lui-même** dans `.env.local` puis dans Vercel. Ne jamais afficher ni écrire une clé ou un mot de passe.
+Mot de passe admin : l'élève le choisit (12 caractères minimum, refusé sinon) ou le génère dans son propre terminal avec `node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"` (même commande sur Mac et Windows), et le met **lui-même** dans `.env.local` puis dans Vercel. Ne jamais afficher ni écrire une clé ou un mot de passe.
 
 ## Copie
 
@@ -62,7 +62,7 @@ Ajouter les 4 variables (Production, Preview, Development) puis redéployer ; `G
 ## Validation (boucle : corriger puis relancer)
 
 - [ ] `tsc --noEmit` et le build du site passent.
-- [ ] `curl -sI http://localhost:3000/cocon/admin` répond 200 (formulaire de login) ; adapter le port.
+- [ ] `node "${CLAUDE_SKILL_DIR}/scripts/blog-outils.mjs" http http://localhost:3000/cocon/admin` répond 200 (`${CLAUDE_SKILL_DIR}` = dossier de ce skill, Codex : dossier du SKILL.md) (formulaire de login) ; adapter le port.
 - [ ] Sans cookie, `POST /api/cocon/brief` répond 401 (test d'auth obligatoire).
 - [ ] Connecté : bouton « Brief seul » sur un article planifié renvoie un brief ; « Générer l'article » affiche l'aperçu ; « Publier en draft » crée le post dans Ghost (lien vers l'éditeur).
 - [ ] Variables présentes dans `.env.local` : `grep -c '^NOM=' .env.local` vaut 1 pour chacune (ne jamais afficher la valeur).

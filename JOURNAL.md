@@ -7,3 +7,10 @@
 - Nettoyage : chemins machine, règles perso et licences par skill retirés ; contenus utiles rapatriés dans `references/` (WCAG, motion, règles SEO, Resend).
 - Contrôles : `claude plugin validate` vert ; installation réelle dans un profil Claude Code temporaire, 46 skills chargés.
 - Dépôt GitHub privé `Atlancius/studio-web`, accès élèves en lecture via `scripts/inviter-eleve.sh`.
+
+## 2026-11-07 — v1.1.0, compatibilité Mac et Windows
+- Demande de Jeff : une même commande pour Claude et Codex, sur Mac et Windows.
+- Codex installe désormais le plugin nativement depuis GitHub ; ajout de `.agents/plugins/marketplace.json`.
+- Toutes les commandes des skills passent par Node, npx, git (Codex sous Windows = PowerShell, sans bash, jq, grep, curl fiable, `&&`).
+- `blog-theme` : règle « zéro erreur gscan » remplacée par une comparaison avec Source non modifié (Source v1.7.6 brut sort déjà 6 erreurs gscan).
+- Tests : voir docs/essais (E-005 à E-007).

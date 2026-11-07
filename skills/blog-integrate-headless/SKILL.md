@@ -62,7 +62,7 @@ NEXT_PUBLIC_SITE_URL=https://<ton-site>.vercel.app
 ```
 
 - `GHOST_CONTENT_API_KEY` : clé Content API (lecture seule, publique) de l'intégration Ghost.
-- `REVALIDATE_SECRET` : générer avec `openssl rand -hex 32`, jamais affiché dans le chat ni commité.
+- `REVALIDATE_SECRET` : l'élève le génère dans son propre terminal avec `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` (même commande sur Mac et Windows), jamais affiché dans le chat ni commité.
 - Vraies valeurs : `.env.local` (ignoré par git) et Vercel → Settings → Environment Variables (Production, Preview, Development), puis redeploy. Attendre la confirmation de l'utilisateur.
 
 ## 5. Webhooks Ghost
@@ -80,8 +80,8 @@ Ghost ne permet pas d'en-tête personnalisé : le secret passe en paramètre d'U
 
 Un point qui échoue : retourner à l'étape concernée, recommencer.
 
-1. `curl -sI <SITE_URL>/blog | head -1` renvoie `200` ; la page affiche les articles (ou « Aucun article publié » si Ghost est vide).
-2. `curl -s <SITE_URL>/sitemap.xml | grep -c "<loc>"` > 0, et contient les `/blog/<slug>`.
+1. `node "${CLAUDE_SKILL_DIR}/scripts/blog-outils.mjs" http <SITE_URL>/blog` renvoie `HTTP 200` (`${CLAUDE_SKILL_DIR}` = dossier de ce skill, Codex : dossier du SKILL.md) ; la page affiche les articles (ou « Aucun article publié » si Ghost est vide).
+2. `node "${CLAUDE_SKILL_DIR}/scripts/blog-outils.mjs" compte <SITE_URL>/sitemap.xml "<loc>"` donne plus de 0 occurrences, et contient les `/blog/<slug>`.
 3. Un article s'ouvre avec le style attendu.
 4. Éditer un article dans Ghost : les logs Vercel de `revalidate-blog` montrent un `200`.
 

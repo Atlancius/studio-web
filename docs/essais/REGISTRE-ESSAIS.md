@@ -16,5 +16,12 @@
 - Recette : `gh repo clone Atlancius/studio-web` puis `scripts/installer-codex.sh` avec un HOME temporaire.
 - Résultat : 46 skills dans `~/.agents/skills`. Verdict : retenu.
 
+
+## E-005 — 2026-11-07 — Scripts Node multiplateformes
+- `node --check` sur les 10 scripts `.mjs` ; zip du thème Ghost vérifié avec `unzip -t` (package.json à la racine, mêmes fichiers que `zip` système sur Source v1.7.6) ; inventaire légal identique à l'ancien script bash ; captures Playwright détectant erreur console, 404 et débordement mobile.
+- Limite : exécutés sur macOS seulement, pas encore sur une vraie machine Windows. Verdict : retenu, à confirmer sous Windows.
+
+## E-006 — 2026-11-07 — Installation Codex depuis le dossier local
+- `CODEX_HOME` temporaire, `codex plugin marketplace add <dossier>`, `codex plugin add studio-web@studio-web` : 46 skills. Verdict : retenu.
 ## À faire
 - Parcours complet `demarrer` avec un vrai élève (nouveau site, puis refonte) ; noter le retour mot pour mot.

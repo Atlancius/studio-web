@@ -39,7 +39,7 @@ Via l'API Ghost : un post par slug, ou tous les posts `status:[published,draft]`
 | 7 | Bloc de profondeur | au moins un `<pre><code>`, `<table>` ou, à défaut, `<blockquote>` |
 | 8 | JSON-LD | le rendu public contient `BlogPosting` (headline, datePublished, dateModified, author, image, mainEntityOfPage) et `BreadcrumbList` |
 
-Critère 8 : tester le HTML rendu de l'URL publique : `curl -s <url-article> | grep -i 'application/ld+json'`. Article en draft : `n/a`, ne compte pas dans le total (score sur 7). Thème Ghost par défaut (Casper) : critère 8 échoue partout, le signaler en tête et renvoyer à `blog-theme`. Scénario C (headless) : le JSON-LD vient de `app/blog/[slug]/page.tsx` (voir `blog-integrate-headless`).
+Critère 8 : tester le HTML rendu de l'URL publique : `node "${CLAUDE_SKILL_DIR}/scripts/blog-outils.mjs" compte <url-article> application/ld+json` (au moins 1 occurrence attendue ; `${CLAUDE_SKILL_DIR}` = dossier de ce skill, Codex : dossier du SKILL.md). Article en draft : `n/a`, ne compte pas dans le total (score sur 7). Thème Ghost par défaut (Casper) : critère 8 échoue partout, le signaler en tête et renvoyer à `blog-theme`. Scénario C (headless) : le JSON-LD vient de `app/blog/[slug]/page.tsx` (voir `blog-integrate-headless`).
 
 Chaque critère échoué reçoit une correction précise et chiffrée (ex. « raccourcir à `…` (52 car.) », « ajouter 2 liens vers `/blog/pilier/x` »), jamais « améliorer le SEO ». Slugs et piliers cités : à croiser avec `cocon.json` (et `blog-link-validation` pour la whitelist).
 

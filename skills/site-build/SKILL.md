@@ -49,7 +49,7 @@ Avant d'écrire une ligne, lire `${CLAUDE_SKILL_DIR}/references/visual-quality.m
 
 ## Validation (boucle)
 
-1. Servir en local (`python3 -m http.server 3000` ou `npx serve .`) et ouvrir chaque page (`verif-navigateur` pour les captures en 4 tailles d'écran et les erreurs console).
+1. Servir en local (`npx --yes serve . -l 3000`, identique sur Mac et Windows, dans un terminal à part ou en tâche de fond) et ouvrir chaque page (`verif-navigateur` pour les captures en 4 tailles d'écran et les erreurs console).
 2. Cocher la checklist de `references/visual-quality.md` ; vérifier desktop, mobile, navigation (menu, dropdowns, ancres), liens internes, images en place.
 3. Défaut trouvé : corriger puis refaire l'étape 1. Cas ciblé : `site-corrige`.
 

@@ -64,10 +64,23 @@ Interdits : visage de personne célèbre, logo de marque, œuvre protégée, fau
 
 ## 5. Post-traitement
 
-Vérifier les outils : `command -v cwebp magick sips`. Aucun : proposer `brew install webp imagemagick` (installation locale) avant de continuer.
+Outil unique, identique sur Mac, Linux et Windows : `sharp-cli`, lancé par `npx` (Node.js suffit, rien à installer à part). Le premier appel le télécharge (quelques secondes). Une commande par ligne, à lancer depuis la racine du site :
 
-- Recadrage centré (Open Graph, bannière) : `magick in.png -resize 1200x630^ -gravity center -extent 1200x630 og-image.jpg` (macOS sans ImageMagick : `sips --resampleWidth 1200 in.png --out t.png && sips -c 630 1200 t.png --out og-image.jpg`).
-- Images du site en WebP < 200 Ko (idéal 100) : `cwebp -q 80 -resize 1600 900 in.png -o assets/hero-principal.webp`, baisser `-q` si trop lourd, recommencer.
+- Images du site en WebP < 200 Ko (idéal 100), 1600 px de large au plus :
+  ```
+  npx --yes sharp-cli -i assets/brouillon-hero.png -o assets/hero-principal.webp -f webp -q 80 resize 1600 --withoutEnlargement
+  ```
+  Trop lourd : relancer avec `-q 70`, puis `-q 60`.
+- Recadrage centré (Open Graph 1200 × 630, bannière) :
+  ```
+  npx --yes sharp-cli -i assets/brouillon-hero.png -o assets/og-image.jpg -f jpeg -q 85 resize 1200 630 --fit cover --position attention
+  ```
+  `--position attention` garde la zone la plus intéressante ; `centre` pour un recadrage strictement centré.
+- Plusieurs fichiers d'un coup : `-i assets/brouillons/*.png -o "assets/{name}.webp"` (le motif `{name}` reprend le nom d'origine ; guillemets obligatoires sous PowerShell).
+- Contrôle poids et dimensions de tout le dossier (signale ce qui dépasse) :
+  ```
+  node "${CLAUDE_SKILL_DIR}/scripts/controle-images.mjs" assets
+  ```
 - Open Graph en JPEG ou PNG sous 300 Ko : WebP n'est pas garanti sur tous les réseaux sociaux.
 - Noms descriptifs : `hero-principal`, `og-image`, `service-coaching`. Contrôler taille et dimensions de chaque fichier final avant de passer à l'étape 6.
 

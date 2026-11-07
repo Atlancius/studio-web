@@ -3,6 +3,8 @@ name: blog-corrige
 description: "Diagnostique et répare les pannes du blog (service Ghost muet, thème refusé, cocon.json cassé, article ou image en échec, lot interrompu, erreur 422), sinon écrit un rapport. Déclencheurs : blog cassé, ça plante."
 ---
 
+> Commandes : `${CLAUDE_SKILL_DIR}` = dossier de ce skill (Codex : le dossier qui contient ce SKILL.md). Les contrôles passent par `scripts/blog-outils.mjs` (Node) : identiques sur Mac, Linux et Windows.
+
 # SAV du blog Ghost
 
 `${CLAUDE_SKILL_DIR}` = dossier de ce skill (dans Codex : le dossier qui contient ce SKILL.md). Question à l'élève : `AskUserQuestion` (Claude) ou question dans le chat (Codex).
@@ -12,7 +14,7 @@ Objectif : identifier la zone, dérouler un diagnostic ciblé **une question à 
 **Règle secrets** : ne jamais afficher la valeur d'une clé (`GHOST_ADMIN_API_KEY`, `FAL_KEY`, `ANTHROPIC_API_KEY`) ni la coller dans `bug-*.md`. Tester la présence seulement :
 
 ```bash
-for v in GHOST_URL GHOST_ADMIN_API_KEY FAL_KEY ANTHROPIC_API_KEY; do printenv "$v" >/dev/null && echo "$v : définie" || echo "$v : absente"; done
+node "${CLAUDE_SKILL_DIR}/scripts/blog-outils.mjs" env GHOST_URL GHOST_ADMIN_API_KEY FAL_KEY ANTHROPIC_API_KEY
 ```
 
 (Pour un site Next.js, les variables vivent dans `.env.local` : `grep -c '^NOM=' .env.local` vaut 1 si présente.)
@@ -32,7 +34,7 @@ Demande laquelle :
 
 ### 1. Setup Ghost
 
-1. L'URL répond-elle ? `curl -I https://<ton-blog>` : on veut 200 ou 301 ; `connection refused` : instance endormie ou arrêtée.
+1. L'URL répond-elle ? `node "${CLAUDE_SKILL_DIR}/scripts/blog-outils.mjs" http https://<ton-blog>` : on veut 200 ou 301 ; « pas de réponse » : instance endormie ou arrêtée.
 2. DNS du sous-domaine propagé ? `dig <sous-domaine> +short` doit renvoyer une IP (5-10 min, jusqu'à 24 h).
 3. HTTPS valide ? `SSL certificate problem` : le certificat Let's Encrypt n'est pas encore émis, attendre 1 à 3 min.
 4. MCP Ghost listé ? `claude mcp list` (Claude Code) ou `codex mcp list` (Codex) : une ligne `ghost`. Absente : serveur non installé, ou session à redémarrer.
@@ -42,21 +44,21 @@ Fixes : redémarrer la session (règle le MCP muet le plus souvent) ; retester a
 
 ### 2. Thème
 
-1. ZIP présent et non vide ? `ls -lh theme.zip` (au moins quelques Ko). Absent : `blog-theme` a planté avant la fin.
+1. ZIP présent et non vide ? `node -e "console.log(require('fs').statSync('theme.zip').size)"` (taille en octets : au moins quelques milliers). Absent : `blog-theme` a planté avant la fin.
 2. Message de rejet Ghost : `missing default.hbs` (squelette manquant), `package.json is invalid` (JSON cassé), `unsupported features` (helpers trop récents pour la version de Ghost).
-3. `package.json` valide ? `jq empty theme/package.json`.
+3. `package.json` valide ? `node "${CLAUDE_SKILL_DIR}/scripts/blog-outils.mjs" json-check theme/package.json`.
 4. Thème **activé** ? L'upload ne suffit pas : Settings > Design > Change theme > Activate.
 5. Rendu cassé sur certaines pages seulement : cibler le `.hbs` (`post.hbs`, `index.hbs`, `tag.hbs`).
 
-Fixes : régénérer le thème avec `blog-theme` ; valider avec gscan : `npm install -g gscan` puis `gscan theme.zip -z` (README : https://github.com/TryGhost/gscan) ; vider le cache navigateur (Cmd/Ctrl+Maj+R) ; en dernier recours, repasser sur Casper, vérifier le contenu, réactiver le thème custom.
+Fixes : régénérer le thème avec `blog-theme` ; valider avec gscan : `npx --yes gscan -z theme.zip` (sans installation globale ; erreurs déjà présentes dans Source non modifié : voir `blog-theme`, étape 6) (README : https://github.com/TryGhost/gscan) ; vider le cache navigateur (Cmd/Ctrl+Maj+R) ; en dernier recours, repasser sur Casper, vérifier le contenu, réactiver le thème custom.
 
 ### 3. Cocon
 
 1. `brief.md` présent ? Sinon `blog-cocon` s'arrête dès le départ.
-2. `cocon.json` valide ? `jq empty cocon.json`. `parse error` : virgule en trop, caractère orphelin ou non échappé.
+2. `cocon.json` valide ? `node "${CLAUDE_SKILL_DIR}/scripts/blog-outils.mjs" json-check cocon.json`. « JSON invalide » : virgule en trop, caractère orphelin ou non échappé.
 3. Dernière version saine ? `git log --oneline cocon.json`.
 
-Fixes : `cp cocon.json cocon.json.bak && git checkout HEAD~1 -- cocon.json` (écrase la copie locale, d'où la sauvegarde) puis `jq empty cocon.json` ; sans version saine, relancer `blog-cocon` (repart d'un fichier propre, avancement perdu). Schéma attendu : `references/cocon-schema.md` du skill `blog-cocon`.
+Fixes : l'agent copie d'abord `cocon.json` en `cocon.json.bak` (sauvegarde), puis `git restore --source=HEAD~1 -- cocon.json` (écrase la copie locale), puis `node "${CLAUDE_SKILL_DIR}/scripts/blog-outils.mjs" json-check cocon.json` ; sans version saine, relancer `blog-cocon` (repart d'un fichier propre, avancement perdu). Schéma attendu : `references/cocon-schema.md` du skill `blog-cocon`.
 
 ### 4. Article
 
@@ -73,8 +75,7 @@ Fixes : relancer `blog-article` sur la même petite-fille (elle propose de rég�
 
 1. Combien de publiés / restants ? 
    ```bash
-   jq '[.filles[].petites_filles[] | select(.status=="published")] | length' cocon.json
-   jq '[.filles[].petites_filles[] | select(.status!="published")] | length' cocon.json
+   node "${CLAUDE_SKILL_DIR}/scripts/blog-outils.mjs" cocon-stats cocon.json
    ```
 2. Quels articles sont réellement dans Ghost ? Vérifier les 2-3 derniers dans `<blog>/ghost/`.
 3. Quel article a planté ? Le dernier `draft` ou `planned` touché dans `cocon.json`.
