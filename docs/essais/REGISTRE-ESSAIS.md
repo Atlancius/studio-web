@@ -10,7 +10,11 @@
 
 ## E-003 — 2026-11-07 — Installation depuis le dépôt GitHub privé
 - Recette : profil isolé, `claude plugin marketplace add Atlancius/studio-web`, `claude plugin install studio-web@studio-web`.
-- Résultat : voir JOURNAL. Verdict : à compléter.
+- Résultat : marketplace ajoutée, plugin activé, 46 skills chargés (copie marketplace + cache d'installation). Verdict : retenu.
+
+## E-004 — 2026-11-07 — Installation Codex depuis le dépôt
+- Recette : `gh repo clone Atlancius/studio-web` puis `scripts/installer-codex.sh` avec un HOME temporaire.
+- Résultat : 46 skills dans `~/.agents/skills`. Verdict : retenu.
 
 ## À faire
 - Parcours complet `demarrer` avec un vrai élève (nouveau site, puis refonte) ; noter le retour mot pour mot.
