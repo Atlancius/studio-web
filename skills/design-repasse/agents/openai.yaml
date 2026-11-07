@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repasse graphique"
+  short_description: "Créer ou relever le graphisme d'un site"
+  default_prompt: "Utilise $design-repasse pour comprendre l'essence de ce site, cadrer mes envies, chercher des références, me faire choisir une direction et attendre mon accord avant de coder."

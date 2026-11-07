@@ -1,0 +1,7 @@
+interface:
+  display_name: "Design animation"
+  short_description: "Animation web à partir d'une demande en langage simple"
+  default_prompt: "Utilise $design-animation pour faire apparaître les sections de la page quand je descends."
+
+policy:
+  allow_implicit_invocation: true

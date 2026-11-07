@@ -1,0 +1,18 @@
+{
+  "name": "studio-web",
+  "version": "1.0.0",
+  "description": "Pack complet pour créer un site de A à Z avec un agent IA : cadrage interactif, comptes, design, site landing ou multi-pages, formulaire, blog Ghost, réseaux sociaux, SEO et analytics.",
+  "author": { "name": "Jeff Martini" },
+  "license": "SEE LICENSE IN LICENSE",
+  "keywords": ["site", "landing", "blog", "ghost", "design", "marketing", "seo", "analytics", "vercel", "formation"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Studio Web",
+    "shortDescription": "Ton site de A à Z avec l'agent, pas à pas.",
+    "longDescription": "Pack complet pour créer un site de A à Z avec un agent IA : cadrage interactif, comptes, design, site landing ou multi-pages, formulaire, blog Ghost, réseaux sociaux, SEO et analytics. Chaque étape est expliquée et validée avant d'être lancée ; les modules inutiles (blog, réseaux) sont sautés selon tes réponses.",
+    "developerName": "Jeff Martini",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": ["Démarre mon projet de site.", "Reprends mon projet de site où je l'ai laissé.", "Quels comptes dois-je créer pour mon site ?"]
+  }
+}

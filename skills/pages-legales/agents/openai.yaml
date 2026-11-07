@@ -1,0 +1,7 @@
+interface:
+  display_name: "Pages légales"
+  short_description: "Mentions légales, RGPD, cookies, CGU/CGV alignées sur le site"
+  default_prompt: "Utilise $pages-legales pour rédiger les pages légales de mon site."
+
+policy:
+  allow_implicit_invocation: true

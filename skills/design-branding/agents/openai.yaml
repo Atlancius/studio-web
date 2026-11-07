@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design branding"
+  short_description: "Identité visuelle et tokens tirés d'un logo"
+  default_prompt: "Utilise $design-branding pour tirer une identité visuelle complète de ce logo."

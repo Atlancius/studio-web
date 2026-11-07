@@ -1,0 +1,7 @@
+interface:
+  display_name: "Copywriting"
+  short_description: "Textes qui convertissent : landing, emails, posts"
+  default_prompt: "Utilise $copywriting pour réécrire cette accroche pour qu'elle convertisse."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,442 @@
+/* Cocon admin, UI interne minimale, non destinée au public. */
+
+.cocon-login,
+.cocon-admin {
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #111;
+  background: #f7f7f8;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+/* ============ Login ============ */
+
+.cocon-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cocon-login-form {
+  background: #fff;
+  padding: 40px;
+  border-radius: 6px;
+  border: 1px solid #e5e5e8;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cocon-login-form h1 { margin: 0; font-size: 24px; font-weight: 600; }
+.cocon-login-lede { margin: 0; font-size: 14px; color: #6b6b75; }
+
+.cocon-login-error {
+  background: #fee;
+  color: #c00;
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.cocon-login-form input {
+  padding: 10px 12px;
+  border: 1px solid #d4d4d8;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.cocon-login-form button {
+  background: #1a1a1f;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.cocon-login-form button:hover { background: #000; }
+
+/* ============ Admin layout ============ */
+
+.cocon-admin { max-width: 1100px; margin: 0 auto; }
+
+.cocon-admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e5e8;
+}
+
+.cocon-admin-header h1 { margin: 0; font-size: 22px; font-weight: 600; }
+.cocon-admin-lede { margin: 4px 0 0; font-size: 13px; color: #6b6b75; }
+
+.cocon-admin-logout {
+  background: transparent;
+  border: 1px solid #d4d4d8;
+  color: #6b6b75;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cocon-admin-logout:hover { border-color: #1a1a1f; color: #1a1a1f; }
+
+/* ============ Fille ============ */
+
+.cocon-admin-fille {
+  background: #fff;
+  border: 1px solid #e5e5e8;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.cocon-admin-fille-head {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  border-bottom: 1px solid #ececef;
+  background: #fafafb;
+}
+
+.cocon-admin-fille-head h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.cocon-admin-fille-meta { margin: 4px 0 0; font-size: 12px; color: #6b6b75; }
+.cocon-admin-fille-meta code {
+  background: #f0f0f3;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  color: #1a1a1f;
+}
+
+/* ============ Status badges ============ */
+
+.cocon-status {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.cocon-status--published { background: #d1fae5; color: #065f46; }
+.cocon-status--draft { background: #fef3c7; color: #78350f; }
+.cocon-status--planned { background: #e5e5e8; color: #4b4b53; }
+
+/* ============ Petites-filles ============ */
+
+.cocon-admin-pf-list { list-style: none; margin: 0; padding: 0; }
+.cocon-admin-pf { border-bottom: 1px solid #f0f0f3; }
+.cocon-admin-pf:last-child { border-bottom: none; }
+
+.cocon-admin-pf-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+}
+
+.cocon-admin-pf-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cocon-admin-pf-title { font-size: 14px; font-weight: 500; line-height: 1.3; }
+.cocon-admin-pf-keyword { margin-top: 2px; font-size: 11px; color: #6b6b75; }
+.cocon-admin-pf-keyword code {
+  background: #f0f0f3;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  color: #1a1a1f;
+}
+.cocon-admin-pf-ghost { margin-left: 6px; }
+
+.cocon-admin-pf-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* ============ Buttons ============ */
+
+.cocon-btn {
+  background: <ACCENT_COLOR>;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.cocon-btn:hover:not(:disabled) { filter: brightness(0.85); }
+.cocon-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.cocon-btn-primary { background: <ACCENT_COLOR>; color: #fff; }
+.cocon-btn-light {
+  background: #fff;
+  color: #1a1a1f;
+  border: 1px solid #d4d4d8;
+}
+.cocon-btn-light:hover:not(:disabled) {
+  border-color: <ACCENT_COLOR>;
+  color: <ACCENT_COLOR>;
+}
+
+/* ============ Tabs ============ */
+
+.cocon-tabs {
+  display: flex;
+  gap: 4px;
+  border: 1px solid #d4d4d8;
+  border-radius: 4px;
+  padding: 2px;
+  background: #fff;
+}
+
+.cocon-tab {
+  background: transparent;
+  border: none;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #6b6b75;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.cocon-tab.is-active { background: #1a1a1f; color: #fff; }
+.cocon-tab:hover:not(.is-active) { background: #f0f0f3; color: #1a1a1f; }
+
+/* ============ Output ============ */
+
+.cocon-admin-output { padding: 0 20px 16px; background: #fafafb; }
+
+.cocon-admin-loading {
+  padding: 12px;
+  font-size: 13px;
+  color: #6b6b75;
+  font-style: italic;
+}
+
+.cocon-admin-error {
+  padding: 12px;
+  background: #fee;
+  color: #b00;
+  font-size: 13px;
+  border-radius: 4px;
+}
+
+.cocon-admin-raw {
+  margin: 8px 0 0;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #f0d0d0;
+  font-size: 11px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.cocon-admin-usage {
+  font-size: 11px;
+  color: #6b6b75;
+  margin-bottom: 8px;
+  font-family: ui-monospace, "SF Mono", monospace;
+}
+
+.cocon-admin-usage-detail {
+  font-size: 10px;
+  color: #9b9ba5;
+  display: block;
+  margin-top: 2px;
+}
+
+.cocon-admin-json {
+  background: #1a1a1f;
+  color: #e5e5e8;
+  padding: 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: ui-monospace, "SF Mono", monospace;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ============ Meta SEO grid ============ */
+
+.cocon-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+
+@media (max-width: 720px) {
+  .cocon-meta-grid { grid-template-columns: 1fr; }
+}
+
+.cocon-meta-field {
+  background: #fff;
+  border: 1px solid #e5e5e8;
+  border-radius: 4px;
+  padding: 10px 12px;
+}
+
+.cocon-meta-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b6b75;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.cocon-meta-label > span:first-child { flex: 1; }
+
+.cocon-meta-count {
+  background: #f0f0f3;
+  color: #6b6b75;
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-size: 9px;
+  font-weight: 600;
+  font-family: ui-monospace, "SF Mono", monospace;
+}
+
+.cocon-meta-count.is-over { background: #fee; color: #c00; }
+
+.cocon-meta-copy {
+  background: transparent;
+  border: 1px solid #e5e5e8;
+  color: #6b6b75;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.cocon-meta-copy:hover { border-color: #1a1a1f; color: #1a1a1f; }
+
+.cocon-meta-value {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #1a1a1f;
+  word-break: break-word;
+}
+
+/* ============ Article preview ============ */
+
+.cocon-article-actions { display: flex; gap: 8px; margin: 16px 0 12px; }
+
+.cocon-article-preview-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b6b75;
+  font-weight: 600;
+  margin: 16px 0 8px;
+}
+
+.cocon-article-preview {
+  width: 100%;
+  height: 70vh;
+  border: 1px solid #e5e5e8;
+  border-radius: 6px;
+  background: #fff;
+}
+
+/* ============ Publish ============ */
+
+.cocon-btn-publish { background: #15171a; color: #fff; font-weight: 600; }
+.cocon-btn-publish:hover:not(:disabled) { background: #000; }
+
+.cocon-publish-success {
+  margin: 12px 0 0;
+  padding: 12px 16px;
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.cocon-publish-success a {
+  color: #047857;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.cocon-publish-error {
+  margin: 12px 0 0;
+  padding: 12px 16px;
+  background: #fee;
+  color: #b00;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.cocon-publish-image { margin-top: 12px; }
+.cocon-publish-image-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #047857;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.cocon-publish-image-preview {
+  max-width: 100%;
+  max-height: 280px;
+  border-radius: 4px;
+  border: 1px solid #047857;
+  display: block;
+}
+
+.cocon-publish-image-warn {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: #fef3c7;
+  color: #78350f;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.cocon-publish-image-warn code {
+  background: #fff;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.cocon-publish-image-hint { color: #92400e; opacity: 0.85; }
