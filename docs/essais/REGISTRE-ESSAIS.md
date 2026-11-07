@@ -23,5 +23,11 @@
 
 ## E-006 — 2026-11-07 — Installation Codex depuis le dossier local
 - `CODEX_HOME` temporaire, `codex plugin marketplace add <dossier>`, `codex plugin add studio-web@studio-web` : 46 skills. Verdict : retenu.
+## E-007 — 2026-11-07 — Installation 1.1.0 depuis GitHub (Claude Code et Codex)
+- Claude Code : profil `CLAUDE_CONFIG_DIR` temporaire, `marketplace add Atlancius/studio-web` puis `install` : 1.1.0 activé.
+- Codex : `CODEX_HOME` temporaire (le dossier doit exister). Premier essai en échec : « could not read Username for https://github.com », Codex clone en HTTPS sans assistant d'identifiants. Avec l'assistant de `gh auth setup-git` (simulé par un `GIT_CONFIG_GLOBAL` temporaire) : 1.1.0 installé, 46 skills.
+- Conséquence : `gh auth setup-git` est obligatoire dans le README. Verdict : retenu.
+
 ## À faire
+- Installation et parcours sur un vrai PC Windows (PowerShell 5.1 et 7, Claude Code et Codex).
 - Parcours complet `demarrer` avec un vrai élève (nouveau site, puis refonte) ; noter le retour mot pour mot.
