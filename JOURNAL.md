@@ -14,3 +14,7 @@
 - Toutes les commandes des skills passent par Node, npx, git (Codex sous Windows = PowerShell, sans bash, jq, grep, curl fiable, `&&`).
 - `blog-theme` : règle « zéro erreur gscan » remplacée par une comparaison avec Source non modifié (Source v1.7.6 brut sort déjà 6 erreurs gscan).
 - Tests : voir docs/essais (E-005 à E-007).
+
+## 2026-11-07 — Dépôt passé en public
+- Demande de Jeff : une commande sans invitation. Dépôt rendu public après vérification de tout l'historique (aucune mention privée, `docs/prive/` jamais commité).
+- README simplifié (plus de GitHub CLI ni d'invitation) ; `scripts/acces-eleves.mjs` retiré.

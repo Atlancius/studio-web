@@ -2,7 +2,7 @@
 
 Pack de skills pour créer ton site de A à Z avec un agent IA (Claude Code ou Codex) : cadrage, comptes, design, site, formulaire, blog, réseaux sociaux, SEO et mesure d'audience. L'agent te pose des questions une à une, te propose des choix et ne lance que les modules dont tu as besoin.
 
-Auteur : Jeff Martini. Licence : voir `LICENSE` (usage personnel et pour tes clients, pas de redistribution, ne partage pas l'accès au dépôt).
+Auteur : Jeff Martini. Licence : voir `LICENSE` (usage personnel et pour tes clients, pas de redistribution, code visible mais protégé par la licence).
 
 ## Installer
 
@@ -10,7 +10,7 @@ Les commandes ci-dessous sont les mêmes sur Mac et sur Windows, pour Claude Cod
 
 ### Étape 1 — Installer les outils de base (une seule fois)
 
-Il faut Git, Node.js (version LTS) et GitHub CLI.
+Il faut Git et Node.js (version LTS). Pas besoin de compte GitHub pour installer le pack.
 
 **Windows** (PowerShell) :
 
@@ -22,15 +22,11 @@ winget install --id Git.Git -e
 winget install --id OpenJS.NodeJS.LTS -e
 ```
 
-```powershell
-winget install --id GitHub.cli -e
-```
-
 Ferme puis rouvre PowerShell pour que les nouvelles commandes soient reconnues.
 
-**Mac** (Terminal) : installe Node.js LTS depuis https://nodejs.org et GitHub CLI depuis https://cli.github.com (ou `brew install node gh` si tu as Homebrew). Git : lance `git --version` ; si le Mac propose d'installer les outils de développement, accepte.
+**Mac** (Terminal) : installe Node.js LTS depuis https://nodejs.org (ou `brew install node` si tu as Homebrew). Git : lance `git --version` ; si le Mac propose d'installer les outils de développement, accepte.
 
-Vérifie (les trois doivent afficher un numéro de version) :
+Vérifie (les deux doivent afficher un numéro de version) :
 
 ```bash
 git --version
@@ -40,27 +36,7 @@ git --version
 node --version
 ```
 
-```bash
-gh --version
-```
-
-### Étape 2 — Accès au dépôt privé (une seule fois)
-
-1. Crée un compte GitHub gratuit si tu n'en as pas : https://github.com/signup
-2. Donne ton pseudo GitHub à Jeff, puis accepte l'invitation reçue par e-mail (ou sur https://github.com/Atlancius/studio-web/invitations).
-3. Connecte ton ordinateur à GitHub :
-
-```bash
-gh auth login
-```
-
-Réponds : GitHub.com → HTTPS → Yes (authentifier Git) → Login with a web browser. Puis :
-
-```bash
-gh auth setup-git
-```
-
-### Étape 3 — Installer le plugin
+### Étape 2 — Installer le plugin
 
 **Claude Code** — dans Claude Code, tape :
 
@@ -95,8 +71,7 @@ Puis relance Codex (l'application Codex voit aussi le plugin).
 
 ### Si ça bloque
 
-- « repository not found » ou demande de mot de passe : invitation pas encore acceptée, ou `gh auth setup-git` pas lancé.
-- « gh », « git » ou « node » inconnu sous Windows : fermer et rouvrir PowerShell après l'installation.
+- « git » ou « node » inconnu sous Windows : fermer et rouvrir PowerShell après l'installation.
 - Claude Code sous Windows a besoin de Git for Windows (installé à l'étape 1).
 
 ## Démarrer
@@ -147,20 +122,3 @@ Selon tes réponses, l'agent te demandera seulement une partie de ces comptes : 
 - Rien n'est mis en production, publié ou payé sans ton « oui » au moment même.
 - Le dossier `.studio/` contient tes réponses : il est exclu de Git.
 
-## Pour Jeff : gérer les accès
-
-Depuis le dossier du dépôt, sur Mac ou Windows :
-
-```bash
-node scripts/acces-eleves.mjs inviter pseudo1 pseudo2
-```
-
-```bash
-node scripts/acces-eleves.mjs retirer pseudo1
-```
-
-```bash
-node scripts/acces-eleves.mjs lister
-```
-
-Chaque élève reçoit un accès en lecture seule.

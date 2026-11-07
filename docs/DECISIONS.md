@@ -17,7 +17,7 @@
 - Décision : outil d'image disponible dans la session, sinon photos de l'élève ou banque libre ; service payant seulement au choix de l'élève, coût annoncé avant chaque lot. Jamais de texte ou de logo collé sur une image générée.
 - Écarté : imposer un service payant précis.
 
-## ADR-005 — Distribution par dépôt GitHub privé (2026-11-07)
+## ADR-005 — Distribution par dépôt GitHub (2026-11-07, révisé : public)
 - Décision : dépôt privé `Atlancius/studio-web`, élèves invités en lecture seule ; installation Claude Code par `/plugin marketplace add Atlancius/studio-web`, Codex par clone + `scripts/installer-codex.sh`.
 - Écarté : zip en pièce jointe (pas de mise à jour, copies non contrôlées) ; dépôt public (contenu visible de tous).
 - Conséquence : chaque élève a besoin d'un compte GitHub et de `gh auth login` avant l'installation.
@@ -25,3 +25,8 @@
 ## ADR-006 — Commandes multiplateformes en Node (2026-11-07)
 - Décision : seules les commandes Node (≥ 20), npx, git et gh dans les skills ; scripts `.mjs` sans dépendance ; installation via les marketplaces natives de Claude Code et Codex.
 - Écarté : imposer Git Bash à tous (Codex sous Windows n'y passe pas) ; doubler chaque commande en bash et PowerShell (deux versions à maintenir).
+
+## ADR-007 — Dépôt public (2026-11-07, remplace la partie « privé » d'ADR-005)
+- Contexte : un dépôt privé exige d'inviter chaque élève ; Jeff veut une seule commande sans invitation.
+- Décision : dépôt `Atlancius/studio-web` public ; la licence propriétaire reste la protection (pas de revente ni de redistribution).
+- Conséquence : installation sans compte GitHub ni `gh auth` ; code lisible par tous ; historique vérifié sans donnée privée avant le passage.

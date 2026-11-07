@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.1 — 2026-11-07
+- Dépôt public : installation sans compte GitHub ; README simplifié.
+
 ## 1.1.0 — 2026-11-07
 - Compatibilité Mac, Linux et Windows : commandes des skills en Node, npx et git uniquement, une commande par ligne (PowerShell 5.1 compris).
 - Nouveaux scripts Node : thème Ghost (zip, JWT, upload), outils blog, inventaire légal, captures navigateur, contrôle d'images, analyse Google Trends.
